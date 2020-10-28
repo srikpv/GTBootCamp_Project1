@@ -9,7 +9,7 @@ let yahoo_quote_url = {
     },
     headers: {
         "x-rapidapi-host": "yahoo-finance-low-latency.p.rapidapi.com",
-        "x-rapidapi-key": "03726e44d5msh28a4c8dc98c3631p1f5ecfjsnea1c5a911765",
+        "x-rapidapi-key": "",
         "useQueryString": true
     }
 };
@@ -22,7 +22,7 @@ let yahoo_history_url = {
     },
     headers: {
         "x-rapidapi-host": "yahoo-finance-low-latency.p.rapidapi.com",
-        "x-rapidapi-key": "03726e44d5msh28a4c8dc98c3631p1f5ecfjsnea1c5a911765",
+        "x-rapidapi-key": "",
         "useQueryString": true
     }
 };
@@ -80,7 +80,7 @@ let GetHistoryJSON = (url_obj, symbols, range) => {
         "method": "GET",
         "headers": {
             "x-rapidapi-host": "yahoo-finance-low-latency.p.rapidapi.com",
-            "x-rapidapi-key": "03726e44d5msh28a4c8dc98c3631p1f5ecfjsnea1c5a911765"
+            "x-rapidapi-key": ""
         }
     })
     .then(response => { return response.json(); })
@@ -95,7 +95,7 @@ let GetHistoryJSON = (url_obj, symbols, range) => {
         "method": "GET",
         "headers": {
             "x-rapidapi-host": "yahoo-finance-low-latency.p.rapidapi.com",
-            "x-rapidapi-key": "03726e44d5msh28a4c8dc98c3631p1f5ecfjsnea1c5a911765"
+            "x-rapidapi-key": ""
         }
     }
     
@@ -121,19 +121,19 @@ $(document).ready(() => {
     });
     //console.log(FormattedDate(1590984000));
 
-//     fetch("https://yahoo-finance-low-latency.p.rapidapi.com/v8/finance/spark?range=5d&symbols=AAPL%252CMSFT", {
-// 	"method": "GET",
-// 	"headers": {
-// 		"x-rapidapi-host": "yahoo-finance-low-latency.p.rapidapi.com",
-// 		"x-rapidapi-key": "03726e44d5msh28a4c8dc98c3631p1f5ecfjsnea1c5a911765"
-// 	}
-// })
-// .then(response => {
-// 	console.log(response);
-// })
-// .catch(err => {
-// 	console.log(err);
-// });
+    fetch("https://yahoo-finance-low-latency.p.rapidapi.com/v8/finance/spark?range=5d&symbols=AAPL%252CMSFT", {
+	"method": "GET",
+	"headers": {
+		"x-rapidapi-host": "yahoo-finance-low-latency.p.rapidapi.com",
+		"x-rapidapi-key": ""
+	}
+})
+.then(response => {
+	console.log(response);
+})
+.catch(err => {
+	console.log(err);
+});
 
 
 // var settings = {

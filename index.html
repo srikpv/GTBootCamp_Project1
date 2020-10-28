@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>networth calculator</title>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.5.9/dist/css/uikit.min.css" />
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="CoreScripts.js"></script>
+  <script src="index.js"></script>
+</head>
+<body>
+ 
+<div class="uk-grid-small uk-form-horizontal">
+        <div>
+            <label for="txtTicker" class="uk-form-label">Ticker: </label>
+            <input type="text" class="uk-input" id="txtTicker">
+        </div>
+        <div>
+            <label for="txtDatePurchased">Date Purchased: </label>
+            <input id="txtDatePurchased"  class="uk-input" >    
+        </div>
+        <div>
+            <label for="txtAmountInvested">Amount Invested: </label>
+            <input id="txtAmountInvested"  class="uk-input" >
+        </div>
+        <button id="btnAdd">Add</button>
+        <button id="btnCalculate">Calculate</button>
+    </div>
+</div>
+
+ 
+</body>
+</html>

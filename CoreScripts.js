@@ -17,7 +17,7 @@ class Ticker{
     }
 };
 
-let Saved_Ticker = class extends Ticker{
+let Investment = class extends Ticker{
     constructor(companyName, symbol, purchasedDate, amountInvested){
         super(companyName, symbol);
         this.purchasedDate = purchasedDate;

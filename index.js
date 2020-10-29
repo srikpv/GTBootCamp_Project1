@@ -1,4 +1,3 @@
-const proxyurl = "https://cors-anywhere.herokuapp.com/";
 const history_url = "https://api.tiingo.com/tiingo/daily/XXXXX/prices?startDate=YYYYY&endDate=ZZZZZ&token=9f9b1b2ec07c0272bcf74c8c6939d83586088573";
 const current_url = "https://api.tiingo.com/tiingo/daily/XXXXX/prices?token=9f9b1b2ec07c0272bcf74c8c6939d83586088573";
 
@@ -33,7 +32,7 @@ let AddTicker = () => {
     let endDate = new Date(Number(datePurchased));
     endDate.setDate(datePurchased.getDate() + 5);
 
-    let saved_ticker = new Saved_Ticker(BinarySearch(Tickers, symbol), symbol, datePurchased, amountInvested);
+    let saved_ticker = new Investment(GetCompanyName(Tickers, symbol), symbol, datePurchased, amountInvested);
     console.log(saved_ticker);
     let promise1 = fetch(history_url.replace(/XXXXX/i,symbol).replace(/YYYYY/i,FormatDate(datePurchased)).replace(/ZZZZZ/i,FormatDate(endDate)))
             .then(response => response.json())

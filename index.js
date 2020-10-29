@@ -1,31 +1,10 @@
 const proxyurl = "https://cors-anywhere.herokuapp.com/";
+const history_url = "https://api.tiingo.com/tiingo/daily/XXXXX/prices?startDate=YYYYY&endDate=ZZZZZ&token=9f9b1b2ec07c0272bcf74c8c6939d83586088573";
+const current_url = "https://api.tiingo.com/tiingo/daily/XXXXX/prices?token=9f9b1b2ec07c0272bcf74c8c6939d83586088573";
 
-let yahoo_quote_url = {
-    url: "https://yahoo-finance-low-latency.p.rapidapi.com/v6/finance/quote?",
-    query: {
-        "region": "US",
-        "lang": "en",
-        "symbols": ""
-    },
-    headers: {
-        "x-rapidapi-host": "yahoo-finance-low-latency.p.rapidapi.com",
-        "x-rapidapi-key": "",
-        "useQueryString": true
-    }
-};
-
-let yahoo_history_url = {
-    url: "https://yahoo-finance-low-latency.p.rapidapi.com/v8/finance/spark?",
-    query: {
-        "range": "",
-        "symbols": ""
-    },
-    headers: {
-        "x-rapidapi-host": "yahoo-finance-low-latency.p.rapidapi.com",
-        "x-rapidapi-key": "",
-        "useQueryString": true
-    }
-};
+let FormatDate = (date) => {
+    return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
+}
 
 let AutoComplete = () => {
     $.getJSON("Tickers.json", (json) => {
@@ -48,62 +27,40 @@ let ClearForm = () =>{
 };
 
 let AddTicker = () => {
-    let saved_ticker = new Saved_Ticker("", $( "#txtTicker" ).val(), $( "#txtDatePurchased" ).datepicker( "getDate" ).getTime()/1000, $( "#txtAmountInvested" ).val());
-    Saved_Tickers.push(saved_ticker);
-    ClearForm();
-}
+    let symbol = $( "#txtTicker" ).val();
+    let datePurchased = $( "#txtDatePurchased" ).datepicker( "getDate" );
+    let amountInvested = $( "#txtAmountInvested" ).val();
+    let endDate = new Date(Number(datePurchased));
+    endDate.setDate(datePurchased.getDate() + 5);
 
-let Calculate = () => {
-    let ticker_list = (Saved_Tickers.reduce((list, item) => {
-                        return (list === "") ? `${item.value}` : `${list},${item.value}`;
-                    }, ""));
-    let min_purchase_date = (Saved_Tickers.reduce((min_date, item) => {
-                            return (min_date < item.purchasedDate) ? min_date: item.purchasedDate;
-                        }, new Date()));
-    let range = "";
-    let diffDays = Math.floor((((new Date()).getTime() / 1000) - min_purchase_date) / (3600 * 24));
-    range_values.forEach(element => {
-        if((diffDays <= element.days && range == ""))
-            range = element.value;
-    });
+    let saved_ticker = new Saved_Ticker(BinarySearch(Tickers, symbol), symbol, datePurchased, amountInvested);
+    console.log(saved_ticker);
+    let promise1 = fetch(history_url.replace(/XXXXX/i,symbol).replace(/YYYYY/i,FormatDate(datePurchased)).replace(/ZZZZZ/i,FormatDate(endDate)))
+            .then(response => response.json())
+            .then(data => { 
+                saved_ticker.PurchasePrice(data[0].adjClose);
 
-    GetHistoryJSON(yahoo_history_url, ticker_list, range);
-}
-
-let GetHistoryJSON = (url_obj, symbols, range) => {
-    let url = new URL(url_obj.url);
-    url_obj.query.range = range;
-    url_obj.query.symbols = symbols;
-    url.search = new URLSearchParams(url_obj.query).toString();
-    console.log(url);
-    var promise = fetch(url.toString(), {
-        "method": "GET",
-        "headers": {
-            "x-rapidapi-host": "yahoo-finance-low-latency.p.rapidapi.com",
-            "x-rapidapi-key": ""
-        }
-    })
-    .then(response => { return response.json(); })
-    .then(json => {
-        console.log(json);
-    });
-
-    var settings = {
-        "async": true,
-        "crossDomain": true,
-        "url": url.toString(),
-        "method": "GET",
-        "headers": {
-            "x-rapidapi-host": "yahoo-finance-low-latency.p.rapidapi.com",
-            "x-rapidapi-key": ""
-        }
-    }
+                let promise2 = fetch(current_url.replace(/XXXXX/i,symbol))
+                    .then(response1 => response1.json())
+                    .then(data1 => { 
+                        saved_ticker.CurrentPrice(data1[0].adjClose);
+                        Saved_Tickers.push(saved_ticker);
+                        let tr = $("<tr>").appendTo($("#tBody"));
+                        $("<td>").appendTo(tr).html(saved_ticker.label);
+                        $("<td>").appendTo(tr).html(saved_ticker.value);
+                        $("<td>").appendTo(tr).html(FormatDate(saved_ticker.purchasedDate));
+                        $("<td>").appendTo(tr).html(formatMoney(saved_ticker.amountInvested));
+                        $("<td>").appendTo(tr).html(formatMoney(saved_ticker.currentPrice * saved_ticker.quantity));
+                        $("<td>").appendTo(tr).html(formatMoney((saved_ticker.currentPrice * saved_ticker.quantity) - saved_ticker.amountInvested));
+                        $("<td>").appendTo(tr).html((((saved_ticker.currentPrice * saved_ticker.quantity) - saved_ticker.amountInvested)/saved_ticker.amountInvested*100).toFixed(2)+"%");
+                        ClearForm();
+                    })
+            }).catch((error) => {
+                console.log("error");
+                ClearForm();
+                })
     
-    $.ajax(settings).done(function (response) {
-        console.log(response);
-    });
 }
-
 
 
 
@@ -119,37 +76,55 @@ $(document).ready(() => {
     $("#btnCalculate").on("click", (e) => {
         Calculate();
     });
-    //console.log(FormattedDate(1590984000));
+    //
 
-    fetch("https://yahoo-finance-low-latency.p.rapidapi.com/v8/finance/spark?range=5d&symbols=AAPL%252CMSFT", {
-	"method": "GET",
-	"headers": {
-		"x-rapidapi-host": "yahoo-finance-low-latency.p.rapidapi.com",
-		"x-rapidapi-key": ""
-	}
-})
-.then(response => {
-	console.log(response);
-})
-.catch(err => {
-	console.log(err);
+    // fetch(current_url.replace(/XXXXX/i,"MSFT"))
+    //     .then(response => response.json())
+    //     .then(data => console.log(data));
+                    
 });
 
 
-// var settings = {
-// 	"async": true,
-// 	"crossDomain": true,
-// 	"url": "https://yahoo-finance-low-latency.p.rapidapi.com/v8/finance/spark?range=5d&symbols=AAPL%252CMSFT",
-// 	"method": "GET",
-// 	"headers": {
-// 		"x-rapidapi-host": "yahoo-finance-low-latency.p.rapidapi.com",
-// 		"x-rapidapi-key": "03726e44d5msh28a4c8dc98c3631p1f5ecfjsnea1c5a911765"
-// 	}
+
+// let yahoo_quote_url = {
+//     url: "https://yahoo-finance-low-latency.p.rapidapi.com/v6/finance/quote?",
+//     query: {
+//         "region": "US",
+//         "lang": "en",
+//         "symbols": ""
+//     },
+//     headers: {
+//         "x-rapidapi-host": "yahoo-finance-low-latency.p.rapidapi.com",
+//         "x-rapidapi-key": "",
+//         "useQueryString": true
+//     }
+// };
+
+// let yahoo_history_url = {
+//     url: "https://yahoo-finance-low-latency.p.rapidapi.com/v8/finance/spark?",
+//     query: {
+//         "range": "",
+//         "symbols": ""
+//     },
+//     headers: {
+//         "x-rapidapi-host": "yahoo-finance-low-latency.p.rapidapi.com",
+//         "x-rapidapi-key": "",
+//         "useQueryString": true
+//     }
+// };
+// let Calculate = () => {
+//     let ticker_list = (Saved_Tickers.reduce((list, item) => {
+//                         return (list === "") ? `${item.value}` : `${list},${item.value}`;
+//                     }, ""));
+//     let min_purchase_date = (Saved_Tickers.reduce((min_date, item) => {
+//                             return (min_date < item.purchasedDate) ? min_date: item.purchasedDate;
+//                         }, new Date()));
+//     let range = "";
+//     let diffDays = Math.floor((((new Date()).getTime() / 1000) - min_purchase_date) / (3600 * 24));
+//     range_values.forEach(element => {
+//         if((diffDays <= element.days && range == ""))
+//             range = element.value;
+//     });
+
+//     GetHistoryJSON(yahoo_history_url, ticker_list, range);
 // }
-
-// $.ajax(settings).done(function (response) {
-// 	console.log(response);
-// });
-
-
-});

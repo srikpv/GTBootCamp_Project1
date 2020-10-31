@@ -1,5 +1,5 @@
-const history_url = "https://api.tiingo.com/tiingo/daily/XXXXX/prices?startDate=YYYYY&endDate=ZZZZZ&token=9f9b1b2ec07c0272bcf74c8c6939d83586088573";
-const current_url = "https://api.tiingo.com/tiingo/daily/XXXXX/prices?token=9f9b1b2ec07c0272bcf74c8c6939d83586088573";
+const history_url = "https://api.tiingo.com/tiingo/daily/XXXXX/prices?startDate=YYYYY&endDate=ZZZZZ&token=";
+const current_url = "https://api.tiingo.com/tiingo/daily/XXXXX/prices?token=";
 
 let FormatDate = (date) => {
     return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;

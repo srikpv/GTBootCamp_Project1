@@ -1,14 +1,7 @@
 let Tickers = [];
 let Saved_Tickers = [];
-let range_values = [
-    {days: 1, value: "1d"},
-    {days: 5, value: "5d"},
-    {days: 90, value: "3mo"},
-    {days: 180, value: "6mo"},
-    {days: 365, value: "1y"},
-    {days: 1825, value: "5y"},
-    {days: 1826, value: "max"}
-];
+let total_worth = 0;
+let net_gain_loss = 0;
 
 class Ticker{
     constructor(companyName, symbol){

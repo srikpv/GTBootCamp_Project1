@@ -35,7 +35,11 @@ let AddTableRow = (company, symbol, date_purchased, amount_invested, current_val
     $("<td>").appendTo(tr).html(formatMoney(net_gain_loss));
     $("<td>").appendTo(tr).html(percentage+"%");
 }
+
+let SaveTicker = (saved_ticker) => {
+    Saved_Tickers.push(saved_ticker);
     
+}
 
 let AddTicker = () => {
     let symbol = $( "#txtTicker" ).val();
@@ -55,7 +59,7 @@ let AddTicker = () => {
                     .then(response1 => response1.json())
                     .then(data1 => { 
                         saved_ticker.CurrentPrice(data1[0].adjClose);
-                        Saved_Tickers.push(saved_ticker);
+                        
                         AddTableRow(saved_ticker.label,
                             saved_ticker.value,
                             saved_ticker.purchasedDate,

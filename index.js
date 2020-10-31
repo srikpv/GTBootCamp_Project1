@@ -25,6 +25,18 @@ let ClearForm = () =>{
     $( "#txtTicker" ).focus();
 };
 
+let AddTableRow = (company, symbol, date_purchased, amount_invested, current_value, net_gain_loss, percentage) => {
+    let tr = $("<tr>").appendTo($("#tBody"));
+    $("<td>").appendTo(tr).html(company);
+    $("<td>").appendTo(tr).html(symbol);
+    $("<td>").appendTo(tr).html(FormatDate(date_purchased));
+    $("<td>").appendTo(tr).html(formatMoney(amount_invested));
+    $("<td>").appendTo(tr).html(formatMoney(current_value));
+    $("<td>").appendTo(tr).html(formatMoney(net_gain_loss));
+    $("<td>").appendTo(tr).html(percentage+"%");
+}
+    
+
 let AddTicker = () => {
     let symbol = $( "#txtTicker" ).val();
     let datePurchased = $( "#txtDatePurchased" ).datepicker( "getDate" );
@@ -44,14 +56,13 @@ let AddTicker = () => {
                     .then(data1 => { 
                         saved_ticker.CurrentPrice(data1[0].adjClose);
                         Saved_Tickers.push(saved_ticker);
-                        let tr = $("<tr>").appendTo($("#tBody"));
-                        $("<td>").appendTo(tr).html(saved_ticker.label);
-                        $("<td>").appendTo(tr).html(saved_ticker.value);
-                        $("<td>").appendTo(tr).html(FormatDate(saved_ticker.purchasedDate));
-                        $("<td>").appendTo(tr).html(formatMoney(saved_ticker.amountInvested));
-                        $("<td>").appendTo(tr).html(formatMoney(saved_ticker.currentPrice * saved_ticker.quantity));
-                        $("<td>").appendTo(tr).html(formatMoney((saved_ticker.currentPrice * saved_ticker.quantity) - saved_ticker.amountInvested));
-                        $("<td>").appendTo(tr).html((((saved_ticker.currentPrice * saved_ticker.quantity) - saved_ticker.amountInvested)/saved_ticker.amountInvested*100).toFixed(2)+"%");
+                        AddTableRow(saved_ticker.label,
+                            saved_ticker.value,
+                            saved_ticker.purchasedDate,
+                            saved_ticker.amountInvested,
+                            (saved_ticker.currentPrice * saved_ticker.quantity),
+                            ((saved_ticker.currentPrice * saved_ticker.quantity) - saved_ticker.amountInvested),
+                            (((saved_ticker.currentPrice * saved_ticker.quantity) - saved_ticker.amountInvested)/saved_ticker.amountInvested*100).toFixed(2));
                         ClearForm();
                     })
             }).catch((error) => {

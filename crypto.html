@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>networth calculator</title>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.5.9/dist/css/uikit.min.css" />
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="CoreScripts.js"></script>
+  <script src="crypto.js"></script>
+</head>
+<body>
+ 
+<div class="uk-grid-small uk-form-horizontal">
+        <div>
+            <label for="cryptoSearch" class="uk-form-label">Crypto: </label>
+            <input type="text" class="uk-input" id="cryptoSearch">
+        </div>
+        <div>
+            <label for="cryptoSearchAmount">Number of Coins: </label>
+            <input id="cryptoSearchAmount"  class="uk-input" >    
+        </div>
+        <div>
+            <label for="cryptoPurchasedDate">Date Purchased: </label>
+            <input id="cryptoPurchasedDate"  class="uk-input" >    
+        </div>
+        <div>
+            <label for="cryptoPrice">Price When Purchased: </label>
+            <input id="cryptoPrice"  class="uk-input" >
+        </div>
+        <button id="btnAdd">Add</button>
+    </div>
+</div>
+<table class="uk-table uk-table-striped">
+    <thead>
+        <tr>
+            <th>Coin</th>
+            <th>Number Of Coins</th>
+            <th>Date Purchased</th>
+            <th>Amount Invested</th>
+            <th>Current Value</th>
+            <th>Net Gain/Loss</th>
+            <th>%</th>
+        </tr>
+    </thead>
+    <tbody id="tBody">
+    </tbody>
+</table>
+ 
+</body>
+</html>

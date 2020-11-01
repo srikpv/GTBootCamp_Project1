@@ -1,55 +1,180 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>networth calculator</title>
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.5.9/dist/css/uikit.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script src="CoreScripts.js"></script>
   <script src="index.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:900|Ubuntu&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" icrossorigin="anonymous">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.6.3/dist/css/foundation.min.css" integrity="sha256-ogmFxjqiTMnZhxCqVmcqTvjfe1Y/ec4WaRj/aQPvn+I=" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.6.3/dist/js/foundation.min.js" integrity="sha256-pRF3zifJRA9jXGv++b06qwtSqX1byFQOLjqa2PTEb2o=" crossorigin="anonymous"></script>
+  <!-- fontawesome -->
+  <script src="https://kit.fontawesome.com/dbb8004941.js" crossorigin="anonymous"></script>
 </head>
 <body>
- 
-<div class="uk-grid-small uk-form-horizontal">
-        <div>
-            <label for="txtTicker" class="uk-form-label">Ticker: </label>
-            <input type="text" class="uk-input" id="txtTicker">
+  <section class="colored-section" id="title">
+    <div class="container-fluid">
+      <!-- Nav Bar -->
+        <nav class="navbar navbar-expand-lg navbar-dark ">
+          <a class="navbar-brand page-title" href="">Net Worth Calculator</a>
+        </nav>
+      <!-- Title -->
+    <div>
+      <div class="row">
+        <div class="col-lg-6">
+          <h1 class="big-heading">Calculate Your Net Worth Today</h1>
         </div>
-        <div>
-            <label for="txtDatePurchased">Date Purchased: </label>
-            <input id="txtDatePurchased"  class="uk-input" >    
+        <div class="col-lg-6">
+          <img class="title-image" src="images/logo.png" alt="logo">
         </div>
-        <div>
-            <label for="txtAmountInvested">Amount Invested: </label>
-            <input id="txtAmountInvested"  class="uk-input" >
-        </div>
-        <button id="btnAdd">Add</button>
+      </div>
     </div>
-</div>
-<table class="uk-table uk-table-striped">
-    <thead>
-        <tr>
-            <th>Company</th>
-            <th>Ticker</th>
-            <th>Date Purchased</th>
-            <th>Amount Invested</th>
-            <th>Current Value</th>
-            <th>Net Gain/Loss</th>
-            <th>%</th>
-            <th><i class='fa fa-trash' id='0'></i></th>
-        </tr>
-    </thead>
-    <tbody id="tBody">
-    </tbody>
-</table>
+    </div>
+  </section>
 
-Net Gain/Loss: <span id="spnNetGainLoss"></span>
-Total Worth: <span id="spnTotalWorth"></span>
+  <div class="spacer"></div>
 
+<div class="white-section">
+   <!---->
+   <h3>Stock Lookup</h3>
+   <article class="grid-container">
+     <div class="grid-x grid-margin-x small-up-2 medium-up-3 large-up-5">
+
+       <div class="cell">
+         <label>Stock Search</label>
+         <div class="input-group input-group-rounded">
+           <input id="txtTicker" class="input-group-field" type="search" placeholder="e.g. AAPL">
+             <div class="input-group-button">
+               <input id="btnCalculate" type="submit" class="button secondary" value="Search">
+             </div>
+         </div>
+       </div>
+
+       <div class="cell">
+         <label>Share Price</label>
+         <input id="stockPrice" type="text" name="keyword" placeholder="Today's Price">
+       </div>
+
+       <div class="cell">
+         <label>Date Purchased </label>
+         <input id="txtDatePurchased"  type="date"  class="uk-input" > 
+       </div>
+
+       <div class="cell">
+         <label>Shares Purchased </label>
+         <input id="txtAmountInvested" type="text" name="keyword" placeholder="Shares Purchased">
+       </div>
+
+       <div class="cell">
+         <label>Add Date and Shares to Save</label>
+         <button id="addStockToPortfolio" type="button" class="success button expanded">Add to Portfolio</button>
+       </div>
+
+     </div>
+   </article>
+
+   <h3>Crypto Lookup</h3>
+   <article class="grid-container">
+     <div class="grid-x grid-margin-x small-up-2 medium-up-3 large-up-5">
+
+       <div class="cell">
+         <label>Currency Search</label>
+         <div class="input-group input-group-rounded">
+           <input id="cryptoSearch" class="input-group-field" type="search" placeholder="e.g. BTC">
+             <div class="input-group-button">
+               <input id="btnCryptoCalculate" type="submit" class="button secondary" value="Search">
+             </div>
+         </div>
+       </div>
+
+       <div class="cell">
+         <label>Currency Price</label>
+         <input id="cryptoPrice" type="text" name="keyword" placeholder="Today's Price">
+       </div>
+
+       <div class="cell">
+         <label>Date Purchased </label>
+         <input id="cryptoPurchaseDate"  type="date"  class="uk-input" > 
+       </div>
+
+       <div class="cell">
+         <label>Amount Purchased </label>
+         <input id="cryptoSearchAmount" type="text" name="keyword" placeholder="Amount Purchased">
+       </div>
+
+       <div class="cell">
+         <label>Add Date and Amount to Save</label>
+         <a id="addCryptoToPortfolio" type="button" class="success button expanded">Add to Portfolio</a>
+       </div>
+
+     </div>
+   </article>
+
+  </div>
+   <!---->
+   <div class="spacer"></div>
+
+<div class="white-section2">
+    <h3>Portfolio Details</h3>
+    <div id="tableWrapper" class="grid-x align-center">
+     <div class="cell medium-10">
+       <table class="responsive-card-table striped" class="table-scroll" class="stack">
+         <thead>
+           <tr>
+             <th>Company</th>
+             <th>Ticker Symbol</th>
+             <th>Date Purchased</th>
+             <th>Amount Invested</th>
+             <th>Current Value</th>
+             <th>Net Gain/Loss</th>
+             <th>Percent Gain/Loss</th>
+           </tr>          
+         </thead>
+         <tbody id="tBody">
+         </tbody>
+       </table>
  
+     </div>
+   </div>
+
+
+   <div class="spacer"></div>
+
+<!--Total Net Worth and Gains/Losses-->
+
+<h3>Portfolio Summary</h3>
+<article class="grid-container">
+  <div class="grid-x grid-margin-x small-up-1 medium-up-2 large-up-2">
+
+    <div class="cell">
+      <label><strong>Total Portfolio Value</strong></label>
+      <div class="callout">
+        <p id="totalPortfolioValue"></p>
+      </div>
+    </div>
+
+    <div class="cell">
+      <label><strong>Total Gain/Loss</strong></label>
+      <div class="callout">
+        <p id="totalGainLoss"></p>
+      </div>
+    </div>
+  </div> 
+</article>
+
+</div>
+<div class="spacer"></div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>Copyright</p>
+  </div>
 </body>
 </html>

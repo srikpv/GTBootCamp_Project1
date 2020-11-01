@@ -1,5 +1,5 @@
-const history_url = "https://api.tiingo.com/tiingo/daily/XXXXX/prices?startDate=YYYYY&endDate=ZZZZZ&token=";
-const current_url = "https://api.tiingo.com/tiingo/daily/XXXXX/prices?token=";
+const history_url = "https://api.tiingo.com/tiingo/daily/XXXXX/prices?startDate=YYYYY&endDate=ZZZZZ&token=9f9b1b2ec07c0272bcf74c8c6939d83586088573";
+const current_url = "https://api.tiingo.com/tiingo/daily/XXXXX/prices?token=9f9b1b2ec07c0272bcf74c8c6939d83586088573";
 
 let FormatDate = (date) => {
     return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
@@ -25,7 +25,7 @@ let ClearForm = () =>{
     $( "#txtTicker" ).focus();
 };
 
-let AddTableRow = (company, symbol, date_purchased, amount_invested, current_value, net_gain_loss, percentage) => {
+let AddTableRow = (id, company, symbol, date_purchased, amount_invested, current_value, net_gain_loss, percentage) => {
     let tr = $("<tr>").appendTo($("#tBody"));
     $("<td>").appendTo(tr).html(company);
     $("<td>").appendTo(tr).html(symbol);
@@ -34,11 +34,12 @@ let AddTableRow = (company, symbol, date_purchased, amount_invested, current_val
     $("<td>").appendTo(tr).html(formatMoney(current_value));
     $("<td>").appendTo(tr).html(formatMoney(net_gain_loss));
     $("<td>").appendTo(tr).html(percentage+"%");
-}
+    $("<td>").appendTo(tr).html(`<i class='fa fa-trash' style='cursor: pointer;' onClick='RemoveTickerFromDB(${id})'></i>`);
 
-let SaveTicker = (saved_ticker) => {
-    Saved_Tickers.push(saved_ticker);
-    
+    total_worth += current_value;
+    total_net_gain_loss += net_gain_loss;
+    $("#spnTotalWorth").html(formatMoney(total_worth));
+    $("#spnNetGainLoss").html(formatMoney(total_net_gain_loss));
 }
 
 let AddTicker = () => {
@@ -49,7 +50,7 @@ let AddTicker = () => {
     endDate.setDate(datePurchased.getDate() + 5);
 
     let saved_ticker = new Investment(GetCompanyName(Tickers, symbol), symbol, datePurchased, amountInvested);
-    console.log(saved_ticker);
+    //console.log(saved_ticker);
     let promise1 = fetch(history_url.replace(/XXXXX/i,symbol).replace(/YYYYY/i,FormatDate(datePurchased)).replace(/ZZZZZ/i,FormatDate(endDate)))
             .then(response => response.json())
             .then(data => { 
@@ -59,14 +60,7 @@ let AddTicker = () => {
                     .then(response1 => response1.json())
                     .then(data1 => { 
                         saved_ticker.CurrentPrice(data1[0].adjClose);
-                        
-                        AddTableRow(saved_ticker.label,
-                            saved_ticker.value,
-                            saved_ticker.purchasedDate,
-                            saved_ticker.amountInvested,
-                            (saved_ticker.currentPrice * saved_ticker.quantity),
-                            ((saved_ticker.currentPrice * saved_ticker.quantity) - saved_ticker.amountInvested),
-                            (((saved_ticker.currentPrice * saved_ticker.quantity) - saved_ticker.amountInvested)/saved_ticker.amountInvested*100).toFixed(2));
+                        AddTickerToDB(saved_ticker);
                         ClearForm();
                     })
             }).catch((error) => {
@@ -87,9 +81,8 @@ $(document).ready(() => {
         AddTicker();
     });
     ClearForm();
-    $("#btnCalculate").on("click", (e) => {
-        Calculate();
-    });
+    InitiateDB();
+    
     //
 
     // fetch(current_url.replace(/XXXXX/i,"MSFT"))

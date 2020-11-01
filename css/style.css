@@ -1,0 +1,255 @@
+body {
+  font-family: "Montserrat"sans-serif;
+  text-align: center;
+  background-color: #EDF5E1;
+
+}
+
+h1, h2, h4, h5, h6 {
+  font-family: "Montserrat";
+  font-weight: bold;
+  text-shadow: 2px 2px 5px black;
+}
+
+.page-title{
+  text-shadow: 1px 1px 2px  green;
+
+}
+
+
+
+h3 {
+  font-family: "Montserrat";
+  font-weight: bold;
+  text-shadow: 1px 1px 2px  black;
+}
+
+p {
+  color: black;
+}
+
+/* Heading */
+
+.section-heading{
+  font-size: 3rem;
+  line-height: 1.5;
+}
+
+.big-heading{
+  font-family: 'Montserrat';
+  font-size: 4rem;
+  line-height: 1.5;
+}
+
+.navbar{
+  color: #fff;
+}
+
+/* Containers */
+
+.container-fluid {
+  padding: 5% 15%
+}
+
+/* Sections */
+.colored-section{
+  background-color: #5CDB95;
+  color: #fff;
+
+}
+
+.white-section{
+  background-color: #EDF5E1;
+}
+
+.white-section2{
+  background-color: #EDF5E1;
+  color: black;
+}
+/* Navigation Bar */
+.navbar {
+  padding: 0 4.5rem 4.5rem 0;
+}
+
+.navbar-brand {
+  font-family: "Ubuntu";
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.nav-item {
+  padding: 0 25px;
+  position: relative;
+  right: 30%;
+}
+
+.nav-link {
+  font-size: 1.2rem;
+  font-family: "Montserrat"sans-serif;
+}
+
+/* Nav Bar Button */
+.download-button {
+  margin: 5% 3% 5% 0;
+}
+
+
+/* Title Section */
+
+#title .container-fluid{
+  padding: 3% 15% 7%;
+  text-align: left;
+}
+
+/* Title Image */
+.title-image {
+  width: 100%;
+  margin-left: 150px;
+  transform: rotate(25deg);
+  position: absolute;
+  right: 10%;
+}
+
+
+.separate{
+  justify-content: right;
+}
+
+
+.adding{
+  background-color: #EDF5E1;
+  
+}
+.column {
+  float: left;
+  width: 25%;
+}
+
+
+
+/* Responsive layout - makes a two column-layout instead of four columns */
+@media screen and (max-width: 900px) {
+  .column {
+    width: 50%;
+  }
+}
+
+/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .column {
+    width: 100%;
+  }
+}
+
+.spacer{
+  background-color: #EDF5E1;
+  height: 50px;
+}
+
+.translucent-form-overlay {
+  max-width: 500px;
+  width: 100%;
+  background-color: rgba(54, 54, 54, 0.8);
+  padding: 20px;
+  color: #fefefe;
+}
+
+.translucent-form-overlay .columns.row {
+  display: block;
+}
+
+.translucent-form-overlay h3, .translucent-form-overlay label {
+  color: #fefefe;
+}
+.translucent-form-overlay input, .translucent-form-overlay select {
+  color: #8a8a8a;
+}
+.translucent-form-overlay input::-webkit-input-placeholder {
+  color: #8a8a8a;
+}
+.translucent-form-overlay input:-ms-input-placeholder {
+  color: #8a8a8a;
+}
+.translucent-form-overlay input::placeholder {
+  color: #8a8a8a;
+}
+
+.footer{
+  background-color: #5CDB95;
+  height: 70px;
+  vertical-align: bottom;
+
+}
+
+
+.responsive-card-table {
+  border-collapse: collapse;
+}
+.responsive-card-table.unstriped tbody {
+  background-color: transparent;
+}
+.responsive-card-table th {
+  background-color: #e6e6e6;
+}
+.responsive-card-table tr,
+.responsive-card-table th,
+.responsive-card-table td {
+  border: 1px solid #0a0a0a;
+}
+@media screen and (max-width: 640px) {
+  .responsive-card-table {
+    
+  }
+  .responsive-card-table thead tr {
+    position: absolute;
+    top: -9999em;
+    left: -9999em;
+  }
+  .responsive-card-table tr {
+    border: 1px solid #0a0a0a;
+    display: block;
+  }
+  .responsive-card-table tr + tr {
+    margin-top: 1.5rem;
+  }
+  .responsive-card-table td {
+    border: none;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-justify-content: flex-start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
+    -webkit-align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
+    border-bottom: 1px solid #0a0a0a;
+    padding-left: 50%;
+    position: relative;
+  }
+  .responsive-card-table td:before {
+    content: attr(data-label);
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1.5;
+    margin-left: -100%;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+  }
+  .responsive-card-table td:after {
+    content: '';
+    position: absolute;
+    background: #e6e6e6;
+    width: 45%;
+    height: 95%;
+    left: 1px;
+    top: 1px;
+    z-index: 0;
+  }
+}
+
+  .title-image {
+    position: static;
+    transform: rotate(0);
+  }

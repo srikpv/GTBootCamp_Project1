@@ -1,137 +1,90 @@
-const history_url = "https://api.tiingo.com/tiingo/daily/XXXXX/prices?startDate=YYYYY&endDate=ZZZZZ&token=9f9b1b2ec07c0272bcf74c8c6939d83586088573";
-const current_url = "https://api.tiingo.com/tiingo/daily/XXXXX/prices?token=9f9b1b2ec07c0272bcf74c8c6939d83586088573";
 
-let FormatDate = (date) => {
-    return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
-}
-
-let AutoComplete = () => {
-    $.getJSON("Tickers.json", (json) => {
-        $.map(json.results, (result) => {
-            Tickers.push(new Ticker(result.companyName, result.ticker));
-        });
-        $( function() {
-            $( "#txtTicker" ).autocomplete({
-                source: Tickers
-            });
-        } );
-    });
-}
-
-let ClearForm = () =>{
-    $( "#txtTicker" ).val("");
-    $( "#txtDatePurchased" ).val("");
-    $( "#txtAmountInvested" ).val("");
-    $( "#txtTicker" ).focus();
-};
-
-let AddTableRow = (id, company, symbol, date_purchased, amount_invested, current_value, net_gain_loss, percentage) => {
-    let tr = $("<tr>").appendTo($("#tBody"));
-    $("<td>").appendTo(tr).html(company);
-    $("<td>").appendTo(tr).html(symbol);
-    $("<td>").appendTo(tr).html(FormatDate(date_purchased));
-    $("<td>").appendTo(tr).html(formatMoney(amount_invested));
-    $("<td>").appendTo(tr).html(formatMoney(current_value));
-    $("<td>").appendTo(tr).html(formatMoney(net_gain_loss));
-    $("<td>").appendTo(tr).html(percentage+"%");
-    $("<td>").appendTo(tr).html(`<i class='fa fa-trash' style='cursor: pointer;' onClick='RemoveTickerFromDB(${id})'></i>`);
-
-    total_worth += current_value;
-    total_net_gain_loss += net_gain_loss;
-    $("#spnTotalWorth").html(formatMoney(total_worth));
-    $("#spnNetGainLoss").html(formatMoney(total_net_gain_loss));
-}
-
-let AddTicker = () => {
-    let symbol = $( "#txtTicker" ).val();
-    let datePurchased = $( "#txtDatePurchased" ).datepicker( "getDate" );
-    let amountInvested = $( "#txtAmountInvested" ).val();
-    let endDate = new Date(Number(datePurchased));
-    endDate.setDate(datePurchased.getDate() + 5);
-
-    let saved_ticker = new Investment(GetCompanyName(Tickers, symbol), symbol, datePurchased, amountInvested);
-    //console.log(saved_ticker);
-    let promise1 = fetch(history_url.replace(/XXXXX/i,symbol).replace(/YYYYY/i,FormatDate(datePurchased)).replace(/ZZZZZ/i,FormatDate(endDate)))
-            .then(response => response.json())
-            .then(data => { 
-                saved_ticker.PurchasePrice(data[0].adjClose);
-
-                let promise2 = fetch(current_url.replace(/XXXXX/i,symbol))
-                    .then(response1 => response1.json())
-                    .then(data1 => { 
-                        saved_ticker.CurrentPrice(data1[0].adjClose);
-                        AddTickerToDB(saved_ticker);
-                        ClearForm();
-                    })
-            }).catch((error) => {
-                console.log("error");
-                ClearForm();
-                })
+class UI {
+    static ClearForm = () =>{
+        $( "#txtTicker" ).val("");
+        $( "#txtDatePurchased" ).val("");
+        $( "#txtAmountInvested" ).val("");
+        $( "#txtTicker" ).focus();
+    }; 
+    static FormatDate = (date) => {
+        return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
+    };
+    static AddTableRow = (id, company, symbol, date_purchased, amount_invested, current_value, net_gain_loss, percentage) => {
+        let tr = $("<tr>").appendTo($("#tBody"));
+        $("<td>").appendTo(tr).html(company);
+        $("<td>").appendTo(tr).html(symbol);
+        $("<td>").appendTo(tr).html(UI.FormatDate(date_purchased));
+        $("<td>").appendTo(tr).html(UI.formatMoney(amount_invested));
+        $("<td>").appendTo(tr).html(UI.formatMoney(current_value));
+        $("<td>").appendTo(tr).html(UI.formatMoney(net_gain_loss));
+        $("<td>").appendTo(tr).html(percentage+"%");
+        $("<td>").appendTo(tr).html(`<i class='fa fa-trash' style='cursor: pointer;' onClick='Storage.RemoveTickerFromDB(${id})'></i>`);
     
+        total_worth += current_value;
+        total_net_gain_loss += net_gain_loss;
+        $("#spnTotalWorth").html(UI.formatMoney(total_worth));
+        $("#spnNetGainLoss").html(UI.formatMoney(total_net_gain_loss));
+    }
+    static AddTicker = () => {
+        let symbol = $( "#txtTicker" ).val();
+        let datePurchased = $( "#txtDatePurchased" ).datepicker( "getDate" );
+        let amountInvested = $( "#txtAmountInvested" ).val();
+        let saved_ticker = new Investment(UI.GetCompanyName(Tickers, symbol), symbol, datePurchased, amountInvested);
+
+        API.GetStockPrices(saved_ticker);
+    }
+    static AutoComplete = () => {
+        $.getJSON("Tickers.json", (json) => {
+            $.map(json.results, (result) => {
+                Tickers.push(new Ticker(result.companyName, result.ticker));
+            });
+            $( function() {
+                $( "#txtTicker" ).autocomplete({
+                    source: Tickers
+                });
+            } );
+        });
+    }; 
+    static formatMoney = (amount, decimalCount = 2, decimal = ".", thousands = ",") =>{
+        try {
+          decimalCount = Math.abs(decimalCount);
+          decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
+      
+          const negativeSign = amount < 0 ? "-$" : "$";
+      
+          let i = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
+          let j = (i.length > 3) ? i.length % 3 : 0;
+      
+          return negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) + (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
+        } catch (e) {
+          console.log(e)
+        }
+      };
+    
+    static GetCompanyName = (ticker_list, symbol) => { 
+        let start=0, end=ticker_list.length-1; 
+        while (start<=end){ 
+            let mid=Math.floor((start + end)/2); 
+            if (ticker_list[mid].value===symbol) return ticker_list[mid].label; 
+            else if (ticker_list[mid].value < symbol)  
+                 start = mid + 1; 
+            else
+                 end = mid - 1; 
+        } 
+        return ""; 
+    } 
 }
 
 
 
 $(document).ready(() => {
-    AutoComplete();
+    UI.AutoComplete();
     $("#txtDatePurchased").datepicker({
         maxDate: 0
     });
     $("#btnAdd").on("click", (e) => {
-        AddTicker();
+        UI.AddTicker();
     });
-    ClearForm();
-    InitiateDB();
-    
-    //
-
-    // fetch(current_url.replace(/XXXXX/i,"MSFT"))
-    //     .then(response => response.json())
-    //     .then(data => console.log(data));
-                    
+    UI.ClearForm();
+    Storage.InitiateDB();        
 });
-
-
-
-// let yahoo_quote_url = {
-//     url: "https://yahoo-finance-low-latency.p.rapidapi.com/v6/finance/quote?",
-//     query: {
-//         "region": "US",
-//         "lang": "en",
-//         "symbols": ""
-//     },
-//     headers: {
-//         "x-rapidapi-host": "yahoo-finance-low-latency.p.rapidapi.com",
-//         "x-rapidapi-key": "",
-//         "useQueryString": true
-//     }
-// };
-
-// let yahoo_history_url = {
-//     url: "https://yahoo-finance-low-latency.p.rapidapi.com/v8/finance/spark?",
-//     query: {
-//         "range": "",
-//         "symbols": ""
-//     },
-//     headers: {
-//         "x-rapidapi-host": "yahoo-finance-low-latency.p.rapidapi.com",
-//         "x-rapidapi-key": "",
-//         "useQueryString": true
-//     }
-// };
-// let Calculate = () => {
-//     let ticker_list = (Saved_Tickers.reduce((list, item) => {
-//                         return (list === "") ? `${item.value}` : `${list},${item.value}`;
-//                     }, ""));
-//     let min_purchase_date = (Saved_Tickers.reduce((min_date, item) => {
-//                             return (min_date < item.purchasedDate) ? min_date: item.purchasedDate;
-//                         }, new Date()));
-//     let range = "";
-//     let diffDays = Math.floor((((new Date()).getTime() / 1000) - min_purchase_date) / (3600 * 24));
-//     range_values.forEach(element => {
-//         if((diffDays <= element.days && range == ""))
-//             range = element.value;
-//     });
-
-//     GetHistoryJSON(yahoo_history_url, ticker_list, range);
-// }

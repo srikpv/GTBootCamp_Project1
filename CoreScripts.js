@@ -3,37 +3,13 @@ let Tickers = [];
 let total_worth = 0;
 let total_net_gain_loss = 0;
 let db;
-
-  //prefixes of implementation that we want to test
-  window.indexedDB = window.indexedDB;
-  
-  //prefixes of window.IDB objects
-  window.IDBTransaction = window.IDBTransaction;
-  
-  
-  let InitiateDB = () => {
-    var request = window.indexedDB.open("Portfolio", 1);
-  
-    request.onerror = function(event) {
-        //console.log("error: ");
-    };
+//prefixes of implementation that we want to test
+window.indexedDB = window.indexedDB;
     
-    request.onsuccess = function(event) {
-        db = request.result;
-        GetTickersFromDB();
-        //console.log("success: "+ db);
-    };
+//prefixes of window.IDB objects
+window.IDBTransaction = window.IDBTransaction;
 
-    request.onupgradeneeded = function(event) {
-        var db = event.target.result;
-        var objectStore = db.createObjectStore("tickers", {keyPath: 'id', autoIncrement:true});
-       
-     };
-  }
-  
-  
-
-class Ticker{
+let Ticker = class{
     constructor(companyName, symbol){
         this.label = companyName;
         this.value = symbol;
@@ -55,104 +31,130 @@ let Investment = class extends Ticker{
     }
 }
 
-function RemoveTickerFromDB(id){
-
-    var request = db.transaction(["tickers"], "readwrite")
-     .objectStore("tickers")
-     .delete(id);
-     
-     request.onsuccess = function(event) {
-        GetTickersFromDB();
-     };
-}
-
-function GetTickersFromDB() {
-    $("#tBody").html("");
-    total_worth = 0;
-    total_net_gain_loss = 0;
-    var objectStore = db.transaction("tickers").objectStore("tickers");
+class Storage {
     
-    objectStore.openCursor().onsuccess = function(event) {
-       var cursor = event.target.result;
-       //console.log(cursor);
-       if (cursor) {
-           //console.log(cursor);
+    static InitiateDB = () => {
+      var request = window.indexedDB.open("Portfolio", 1);
+    
+      request.onerror = function(event) {
+          //console.log("error: ");
+      };
+      
+      request.onsuccess = function(event) {
+          db = request.result;
+          Storage.GetTickersFromDB();
+          //console.log("success: "+ db);
+      };
+  
+      request.onupgradeneeded = function(event) {
+          var db = event.target.result;
+          var objectStore = db.createObjectStore("tickers", {keyPath: 'id', autoIncrement:true});
+         
+       };
+    }
 
-            AddTableRow(cursor.value.id,
-                cursor.value.label,
-                cursor.value.value,
-                cursor.value.purchasedDate,
-                cursor.value.amountInvested,
-                (cursor.value.currentPrice * cursor.value.quantity),
-                ((cursor.value.currentPrice * cursor.value.quantity) - cursor.value.amountInvested),
-                (((cursor.value.currentPrice * cursor.value.quantity) - cursor.value.amountInvested)/cursor.value.amountInvested*100).toFixed(2));
-            
+    static RemoveTickerFromDB = (id) =>{
+
+        var request = db.transaction(["tickers"], "readwrite")
+         .objectStore("tickers")
+         .delete(id);
+         
+         request.onsuccess = function(event) {
+            Storage.GetTickersFromDB();
+         };
+    }
+
+    static GetTickersFromDB() {
+        $("#tBody").html("");
+        total_worth = 0;
+        total_net_gain_loss = 0;
+        var objectStore = db.transaction("tickers").objectStore("tickers");
         
-          //console.log(cursor.value);
-          cursor.continue();
-       }
-    };
- }
+        objectStore.openCursor().onsuccess = function(event) {
+           var cursor = event.target.result;
+           //console.log(cursor);
+           if (cursor) {
+               //console.log(cursor);
+    
+               UI.AddTableRow(cursor.value.id,
+                    cursor.value.label,
+                    cursor.value.value,
+                    cursor.value.purchasedDate,
+                    cursor.value.amountInvested,
+                    (cursor.value.currentPrice * cursor.value.quantity),
+                    ((cursor.value.currentPrice * cursor.value.quantity) - cursor.value.amountInvested),
+                    (((cursor.value.currentPrice * cursor.value.quantity) - cursor.value.amountInvested)/cursor.value.amountInvested*100).toFixed(2));
+                
+            
+              //console.log(cursor.value);
+              cursor.continue();
+           }
+        };
+    }
 
- function AddTickerToDB(investment) {
+    static AddTickerToDB(investment) {
 
-     var request = db.transaction(["tickers"], "readwrite")
-     .objectStore("tickers")
-     .add(investment);
-     
-     request.onsuccess = function(event) {
-
-        AddTableRow(event.target.result,
-            investment.label,
-            investment.value,
-            investment.purchasedDate,
-            investment.amountInvested,
-            (investment.currentPrice * investment.quantity),
-            ((investment.currentPrice * investment.quantity) - investment.amountInvested),
-            (((investment.currentPrice * investment.quantity) - investment.amountInvested)/investment.amountInvested*100).toFixed(2));
-     };
-     
-     request.onerror = function(event) {
-        console.log("Error Adding to DB");
+        var request = db.transaction(["tickers"], "readwrite")
+        .objectStore("tickers")
+        .add(investment);
+        
+        request.onsuccess = function(event) {
+   
+            UI.AddTableRow(event.target.result,
+               investment.label,
+               investment.value,
+               investment.purchasedDate,
+               investment.amountInvested,
+               (investment.currentPrice * investment.quantity),
+               ((investment.currentPrice * investment.quantity) - investment.amountInvested),
+               (((investment.currentPrice * investment.quantity) - investment.amountInvested)/investment.amountInvested*100).toFixed(2));
+        };
+        
+        request.onerror = function(event) {
+           console.log("Error Adding to DB");
+        }
      }
-  }
-
-let FormattedDate = (unix_timestamp) => {
-    var a = new Date(unix_timestamp * 1000);
-    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    var year = a.getFullYear();
-    var month = months[a.getMonth()];
-    var date = a.getDate();
-    var time = date + ' ' + month + ' ' + year;
-    return time;
 }
 
-function formatMoney(amount, decimalCount = 2, decimal = ".", thousands = ",") {
-    try {
-      decimalCount = Math.abs(decimalCount);
-      decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
-  
-      const negativeSign = amount < 0 ? "-$" : "$";
-  
-      let i = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
-      let j = (i.length > 3) ? i.length % 3 : 0;
-  
-      return negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) + (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
-    } catch (e) {
-      console.log(e)
-    }
-  };
+class API {
 
-let GetCompanyName = (ticker_list, symbol) => { 
-    let start=0, end=ticker_list.length-1; 
-    while (start<=end){ 
-        let mid=Math.floor((start + end)/2); 
-        if (ticker_list[mid].value===symbol) return ticker_list[mid].label; 
-        else if (ticker_list[mid].value < symbol)  
-             start = mid + 1; 
-        else
-             end = mid - 1; 
-    } 
-    return ""; 
-} 
+    static API_Key(){
+        return "9f9b1b2ec07c0272bcf74c8c6939d83586088573";
+    }
+
+    static History_URL(){
+        return "https://api.tiingo.com/tiingo/daily/XXXXX/prices?startDate=YYYYY&endDate=ZZZZZ&token=" + API.API_Key();
+    }
+
+    static Current_URL(){
+        return "https://api.tiingo.com/tiingo/daily/XXXXX/prices?token=" + API.API_Key();
+    }
+
+    static GetStockPrices(saved_ticker){
+        
+        let endDate = new Date(Number(saved_ticker.purchasedDate));
+        endDate.setDate(saved_ticker.purchasedDate.getDate() + 5);
+        
+        let history_url = API.History_URL();
+        let current_url = API.Current_URL();
+
+        let promise1 = fetch(history_url.replace(/XXXXX/i,saved_ticker.value).replace(/YYYYY/i,UI.FormatDate(saved_ticker.purchasedDate)).replace(/ZZZZZ/i,UI.FormatDate(endDate)))
+            .then(response => response.json())
+            .then(data => { 
+                saved_ticker.PurchasePrice(data[0].adjClose);
+
+                let promise2 = fetch(current_url.replace(/XXXXX/i,saved_ticker.value))
+                    .then(response1 => response1.json())
+                    .then(data1 => { 
+                        saved_ticker.CurrentPrice(data1[0].adjClose);
+                        Storage.AddTickerToDB(saved_ticker);
+                        UI.ClearForm();
+                    })
+            }).catch((error) => {
+                console.log("error");
+                UI.ClearForm();
+                })
+    }
+}
+
 

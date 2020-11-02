@@ -69,13 +69,13 @@ class Storage {
         total_worth = 0;
         total_net_gain_loss = 0;
         var objectStore = db.transaction("tickers").objectStore("tickers");
-        
+        let count = 0;
         objectStore.openCursor().onsuccess = function(event) {
            var cursor = event.target.result;
-           //console.log(cursor);
+           
            if (cursor) {
                //console.log(cursor);
-    
+               count++;
                UI.AddTableRow(cursor.value.id,
                     cursor.value.label,
                     cursor.value.value,
@@ -89,7 +89,15 @@ class Storage {
               //console.log(cursor.value);
               cursor.continue();
            }
+           if(count === 0){
+                    total_worth = 0;
+                    total_net_gain_loss = 0;
+                    UI.ShowRunningTotal();
+            }
+           
         };
+
+
     }
 
     static AddTickerToDB(investment) {
@@ -134,7 +142,8 @@ class API {
         
         let endDate = new Date(Number(saved_ticker.purchasedDate));
         endDate.setDate(saved_ticker.purchasedDate.getDate() + 5);
-        
+        endDate = (endDate > (new Date())) ? (new Date()) : endDate;
+
         let history_url = API.History_URL();
         let current_url = API.Current_URL();
 

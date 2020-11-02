@@ -22,6 +22,9 @@ class UI {
     
         total_worth += current_value;
         total_net_gain_loss += net_gain_loss;
+        UI.ShowRunningTotal();
+    }
+    static ShowRunningTotal = () => {
         $("#spnTotalWorth").html(UI.formatMoney(total_worth));
         $("#spnNetGainLoss").html(UI.formatMoney(total_net_gain_loss));
     }
@@ -80,7 +83,7 @@ class UI {
 $(document).ready(() => {
     UI.AutoComplete();
     $("#txtDatePurchased").datepicker({
-        maxDate: 0
+        maxDate: -1
     });
     $("#btnAdd").on("click", (e) => {
         UI.AddTicker();

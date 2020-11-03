@@ -193,8 +193,8 @@ class UI {
         UI.ShowRunningTotal();
     }
     static ShowRunningTotal = () => {
-        $("#spnTotalWorth").html(UI.formatMoney(total_worth));
-        $("#spnNetGainLoss").html(UI.formatMoney(total_net_gain_loss));
+        $("#spnTotalWorth").html(UI.formatMoney(total_worth + total_worth_crypto));
+        $("#spnNetGainLoss").html(UI.formatMoney(total_net_gain_loss + total_net_gain_loss_crypto));
     }
     static AddTicker = () => {
         let symbol = $( "#txtTicker" ).val();

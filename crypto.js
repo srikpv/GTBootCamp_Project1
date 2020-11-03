@@ -1,4 +1,6 @@
 let savedCoins=[];
+let total_worth_crypto = 0;
+let total_net_gain_loss_crypto = 0;
 
 let FormatDate_Crypto = (date) => {
     strDate = new Date(date);
@@ -22,6 +24,10 @@ let AddTableRow_Crypto = (coin, number_of_coin, date_purchased, amount_invested,
     $("<td>").appendTo(tr).html(UI.formatMoney(current_value));
     $("<td>").appendTo(tr).html(UI.formatMoney(net_gain_loss));
     $("<td>").appendTo(tr).html(percentage+"%");
+
+    total_worth_crypto += current_value;
+    total_net_gain_loss_crypto += net_gain_loss;
+    UI.ShowRunningTotal();
 }
 
 let SaveCoin = (coin, numberOfCoin, datePurchased, purchasePrice) => {

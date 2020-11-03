@@ -1,4 +1,6 @@
 let savedCoins=[];
+let totalWorth = 0;
+let totalNetGainLoss = 0;
 
 let FormatDate = (date) => {
     strDate = new Date(date);
@@ -22,6 +24,12 @@ let AddTableRow = (coin, number_of_coin, date_purchased, amount_invested, curren
     $("<td>").appendTo(tr).html(formatMoney(current_value));
     $("<td>").appendTo(tr).html(formatMoney(net_gain_loss));
     $("<td>").appendTo(tr).html(percentage+"%");
+    totalWorth = totalWorth + current_value;
+    totalNetGainLoss = totalNetGainLoss + net_gain_loss;
+
+    // add the total
+    $("#total_worth").text("Total worth: " + formatMoney(totalWorth));
+    $("#total_net_gain_loss").text("Total net gain/loss: " + formatMoney(totalNetGainLoss));
 }
 
 let SaveCoin = (coin, numberOfCoin, datePurchased, purchasePrice) => {
@@ -145,13 +153,18 @@ $(document).ready(() => {
     if (storedCoins!=null) {
         savedCoins = storedCoins;
         console.log ("length",savedCoins.length);
+
         for (i=0; i<savedCoins.length; i++) {
         
             ShowCoin(savedCoins[i].coin,
                 savedCoins[i].numberOfCoin,
                 savedCoins[i].datePurchased,
                 savedCoins[i].purchasePrice);
+ 
         }
+        // show the total
+        
+
     }
 //    $("#btnCalculate").on("click", (e) => {
 //      Calculate();

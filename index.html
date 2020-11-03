@@ -10,7 +10,7 @@
    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
    <script src="CoreScripts.js"></script>
-   <script src="index.js"></script>
+   <script src="crypto.js"></script>
    </head>
  <body>
  
@@ -48,5 +48,40 @@
 </table>
 Net Gain/Loss: <span id="spnNetGainLoss"></span>
 Total Worth: <span id="spnTotalWorth"></span>
+<div class="uk-grid-small uk-form-horizontal">
+    <div>
+        <label for="cryptoSearch" class="uk-form-label">Crypto: </label>
+        <input type="text" class="uk-input" id="cryptoSearch">
+    </div>
+    <div>
+        <label for="cryptoSearchAmount">Number of Coins: </label>
+        <input id="cryptoSearchAmount"  class="uk-input" >    
+    </div>
+    <div>
+        <label for="cryptoPurchasedDate">Date Purchased: </label>
+        <input id="cryptoPurchasedDate"  class="uk-input" >    
+    </div>
+    <div>
+        <label for="cryptoPrice">Price When Purchased: </label>
+        <input id="cryptoPrice"  class="uk-input" >
+    </div>
+    <button id="btnAddCrypto">Add</button>
+</div>
+</div>
+<table class="uk-table uk-table-striped">
+<thead>
+    <tr>
+        <th>Coin</th>
+        <th>Number Of Coins</th>
+        <th>Date Purchased</th>
+        <th>Amount Invested</th>
+        <th>Current Value</th>
+        <th>Net Gain/Loss</th>
+        <th>%</th>
+    </tr>
+</thead>
+<tbody id="tBodyCrypto">
+</tbody>
+</table>
  </body>
 </html>

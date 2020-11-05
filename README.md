@@ -35,13 +35,13 @@ Portfolio Tracker app helps users track their stocks and cryptos assets along wi
 
  
 
-Link - Portfolio [a link](https://srikpv.github.io/GTBootCamp_Project1/index.html)
+Link - [Portfolio](https://srikpv.github.io/GTBootCamp_Project1/index.html)
 
 Screenshot - 
 
-IndexedDB [a relative link](images/IndexedDB.jpg)
+[IndexedDB](images/IndexedDB.jpg)
 
-Local Storage [a relative link](images/LocalStorage.jpg)
+[Local Storage](images/LocalStorage.jpg)
 
 ## Validation
 

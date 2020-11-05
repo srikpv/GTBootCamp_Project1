@@ -40,6 +40,7 @@ Link - [Portfolio](https://srikpv.github.io/GTBootCamp_Project1/index.html)
 Screenshot - 
 
 [IndexedDB](images/IndexedDB.jpg)
+![IndexedDB](images/IndexedDB.jpg)
 
 [Local Storage](images/LocalStorage.jpg)
 

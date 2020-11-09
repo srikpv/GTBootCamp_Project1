@@ -2,6 +2,7 @@
 
 Portfolio Tracker app helps users track their stocks and cryptos assets along with capital gains/loss information.
 
+
 ## Main Features
 
   - Real time tracking of stocks and crypto assets
@@ -54,6 +55,10 @@ Today, there are different websites that provide stock and crypto information. T
   Screenshot -
 
   ![MainPage](screenshot/port_tracker.png)
+  
+  ![IndexedDB](images/IndexedDB.jpg)
+
+  ![Local Storage](images/LocalStorage.jpg)
 
 
 ### Lessons Learned

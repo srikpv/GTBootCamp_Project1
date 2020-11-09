@@ -54,7 +54,7 @@ Today, there are different websites that provide stock and crypto information. T
 
   Screenshot -
 
-  ![MainPage](screenshot/port_tracker.png)
+  ![MainPage](images/port_tracker.png)
   
   ![IndexedDB](images/IndexedDB.jpg)
 
